@@ -6,7 +6,7 @@ services:
     container_name: m3notifybot
     restart: unless-stopped
     ports:
-      - "8500:80"
+      - "8500:8000"
     environment:
       - TZ=Europe/Madrid
     env_file:
@@ -18,7 +18,7 @@ services:
         limits:
           memory: 256M
     healthcheck:
-      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:80/health')"]
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 5s
       retries: 3
