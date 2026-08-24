@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: m3notifybot
+    restart: unless-stopped
+    ports:
+      - "8500:80"
+    environment:
+      - TZ=Europe/Madrid
+    env_file:
+      - .env
+    volumes:
+      - /mnt/dietpi_userdata/apps/m3notifybot/data:/app/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:80/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
