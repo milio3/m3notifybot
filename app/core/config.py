@@ -3,6 +3,8 @@
 Todas las variables se cargan desde el entorno o desde el fichero .env.
 """
 
+from typing import ClassVar
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,7 +13,7 @@ class Settings(BaseSettings):
 
     # Metadatos del proyecto
     PROJECT_NAME: str = "m3notifybot"
-    VERSION: str = "0.1.2"
+    VERSION: ClassVar[str] = "0.1.2"
     DEBUG: bool = False
 
     # Telegram
