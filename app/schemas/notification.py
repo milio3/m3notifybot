@@ -1,5 +1,7 @@
 """Esquemas Pydantic para validación de notificaciones entrantes y salientes."""
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -25,8 +27,8 @@ class NotificacionEntrada(BaseModel):
         ..., min_length=1, max_length=4000,
         description="Cuerpo del mensaje",
     )
-    severity: str = Field(
-        default="info", max_length=20,
+    severity: Literal["info", "warning", "critical", "success"] = Field(
+        default="info",
         description="Nivel: info, warning, critical, success",
     )
 

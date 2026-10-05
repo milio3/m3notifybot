@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # Metadatos del proyecto
     PROJECT_NAME: str = "m3notifybot"
-    VERSION: str = "0.1.0"
+    VERSION: str = "0.1.2"
     DEBUG: bool = False
 
     # Telegram

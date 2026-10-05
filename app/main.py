@@ -13,6 +13,7 @@ from app.api.health import router as health_router
 from app.api.v1.notifications import router as notifications_router
 from app.core.config import settings
 from app.core.database import Base, engine
+from app.services.telegram import cerrar_cliente_http
 
 # Configurar logging según el modo de depuración
 logging.basicConfig(
@@ -28,13 +29,14 @@ async def lifespan(app: FastAPI):
     """Ciclo de vida de la aplicación.
 
     Al arrancar: crea las tablas de la BD si no existen.
-    Al detenerse: registra el cierre.
+    Al detenerse: cierra conexiones HTTP y registra el cierre.
     """
     logger.info("Iniciando %s v%s", settings.PROJECT_NAME, settings.VERSION)
     Base.metadata.create_all(bind=engine)
     logger.info("Base de datos inicializada")
     yield
     logger.info("Deteniendo %s", settings.PROJECT_NAME)
+    await cerrar_cliente_http()
 
 
 app = FastAPI(

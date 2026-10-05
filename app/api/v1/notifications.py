@@ -5,6 +5,7 @@ al chat de Telegram configurado.
 """
 
 import logging
+import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
@@ -37,8 +38,8 @@ async def crear_notificacion(
     - 422: payload no válido.
     - 502: error al comunicarse con Telegram.
     """
-    # Autenticación por API key
-    if x_api_key != settings.NOTIFICATION_API_KEY:
+    # Autenticación segura por API key contra timing attacks
+    if not secrets.compare_digest(x_api_key, settings.NOTIFICATION_API_KEY):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Clave API inválida",
@@ -52,8 +53,7 @@ async def crear_notificacion(
         severity=notificacion.severity,
     )
     db.add(registro)
-    db.commit()
-    db.refresh(registro)
+    db.flush()  # Genera el ID autoincremental sin commit anticipado a disco
 
     logger.info(
         "Notificación recibida id=%s origen=%s severidad=%s",
